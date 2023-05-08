@@ -1,0 +1,8 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  namespace: logging
+  name: logging-nfs # IMPORTANT pvc needs to mention this name
+provisioner: logging-nfs # name can be anything
+parameters:
+  archiveOnDelete: "false"
