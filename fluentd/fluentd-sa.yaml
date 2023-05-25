@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  namespace: logging
+  name: fluentd
+  labels:
+    app: fluentd
