@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: logging
+  name: logging-nfs-pod-provisioner
+spec:
+  selector:
+    matchLabels:
+      app: logging-nfs-pod-provisioner
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: logging-nfs-pod-provisioner
+    spec:
+      serviceAccountName: logging-nfs-pod-provisioner-sa # name of service account
+      containers:
+      - name: logging-nfs-pod-provisioner
+        image: registry.k8s.io/sig-storage/nfs-subdir-external-provisioner:v4.0.2
+        volumeMounts:
+        - name: logging-nfs-provisioner-v
+          mountPath: /persistentvolumes
+        env:
+        - name: PROVISIONER_NAME # do not change
+          value: logging-nfs # SAME AS PROVISIONER NAME VALUE IN STORAGECLASS
+        - name: NFS_SERVER # do not change
+          value: 10.100.0.204 # Ip of the NFS SERVER
+        - name: NFS_PATH # do not change
+          value: /home/k8s_nfs  # path to nfs directory setup
+      volumes:
+      - name: logging-nfs-provisioner-v # same as volumemouts name
+        nfs:
+          server: 10.100.0.204
+          path: /home/k8s_nfs
